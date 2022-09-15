@@ -1,0 +1,17 @@
+# Rich Enumerable Demonstration
+
+This project provides an exmaple of a rich enumerable that contains more functionality than the [`enum` type](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/enum) in C# or [`Enum` statement](https://docs.microsoft.com/en-us/dotnet/visual-basic/language-reference/statements/enum-statement) VB.NET.  The implementation is similar to the [`Enum` type in Java](https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html).  The enumerable is defined as a class that contains multiple instances of itself as static readonly fields that represent the named constant values in the enumeration.  Additonally, the class may include an `IEnumerable<T>` method or property to allow enumeration of the values.
+
+The primary advantage of the rich enumeration is that it allows a named set of constant values.  In the `Days` enumeration included in the `Enums` project for example, `Days.Monday` represents not only Monday's position relative to the other days in the week (Day 1), but also the string value "Monday".  While that sort of equivalence may be approximated with a traditional enum value (by calling `.ToString()` or using `Enum.Parse()`), it's limited to a name, a single integer, and a single string.
+
+In addition to providing the ability to group constants under a single name, the rich enumeration can also provide domain-specific functionality by way of methods, since each named instance is a class.
+
+## Days Example
+
+The included `Days` enumeration represents the days of the week and provides functionality for discovering information about the days relative to each other.  For example, the `Days.CountElapsed(Day, Day)` static method allows the `Days` enumeration to tell us about two values relative to one another (i.e. the days elapse in a time span bounded by two days).  In addition, each individual day value can provide information about another value relative to itself by way of the `DaysUntil(Day)` instance method.  This provides flexibility because it allows both the enumeration and the enumeration's values to give functionality at the appropriate level.
+
+The `Days` example is intended to show a basic implementation, but could easily be extended to add functionality to support other needs.  For example, maybe there's a business need to abbreviate the day name in some cases.  Support is easily added by way of one or more additional properties.  Perhaps a comparison method is needed to determine whether a day comes before or after another, or maybe we need flag to show whether a day falls in the weekend or not.  Both of these use cases can be supported more easily in the rich enumeration than in an `enum`.
+
+## When Should I Use It?
+
+Consider using a rich enumerable whenever you have named constants that are not integral values or when there is more than one value that represents the constant.  For example, the `HttpStatusCode.NotFound` value may be represented by its numeric value 404 or its text value "Not Found," or we may want to represent it as the friendly message "The requested resource could not be found at the URL provided."  Also, if you find yourself converting `enum` values to and from strings, you could consider a rich enumerable.  `MyType.Parse("SomeString")` is more intuitive and less tedious to type than `(MyType)Enum.Parse(typeof(MyType), "SomeString")`.  
